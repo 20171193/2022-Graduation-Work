@@ -13,6 +13,14 @@ class AGraduation_0213GameMode : public AGameModeBase
 
 public:
 	AGraduation_0213GameMode();
+/*protected:
+	virtual void BeginPlay()override;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly,Category="UMG Game E")
+	UUserWidget* CurrentWidget_E;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "UMG Game E")
+	TSubclassOf<UUserWidget> HUDWidget_E;*/
 };
 
 

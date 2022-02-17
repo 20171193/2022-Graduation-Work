@@ -13,3 +13,11 @@ AGraduation_0213GameMode::AGraduation_0213GameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 }
+
+/*void AGraduation_0213GameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CurrentWidget_E = CreateWidget_E<UUserWidget>(GetWorld(), HUDWidget_E);
+	CurrentWidget_E->AddToViewport();
+}*/
