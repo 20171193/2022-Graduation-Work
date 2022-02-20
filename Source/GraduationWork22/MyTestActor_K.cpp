@@ -23,6 +23,6 @@ void AMyTestActor_K::BeginPlay()
 void AMyTestActor_K::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	AddActorLocalRotation(FRotator(0.f, RotateSpeed * DeltaTime, 0.f));
 }
 
