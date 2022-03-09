@@ -27,16 +27,22 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION()
-	void MoveForward(float AxisValue);
+	void MoveForward(float value);
 	
 	UFUNCTION()
-	void MoveRight(float AxisValue);
+	void MoveRight(float value);
 	
 	UFUNCTION()
-	void ActRoll(float AxisValue);
+	void ActRoll(float value);
+
+	UFUNCTION()
+	void Sit();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool isSit;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
-	float SprintSpeedMultiplier;
+	float SprintSpeed;
 
 protected:
 	void Sprint();

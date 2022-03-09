@@ -5,7 +5,8 @@
 #include "Engine/Classes/Camera/CameraComponent.h"
 #include "Engine/Classes/Components/CapsuleComponent.h"
 #include "Engine/Classes/GameFramework/SpringArmComponent.h"
-#include "Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h"
+#include "Engine/Classes/GameFramework/Character.h"
+#include "Engine/Classes/GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AAnimTestCharacter_j::AAnimTestCharacter_j()
@@ -21,7 +22,8 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(CameraSpringArmComponent, USpringArmComponent::SocketName);
 
-	SprintSpeedMultiplier = 2.0f;
+	SprintSpeed = 250.0f;
+	isSit = false;
 }
 
 // Called when the game starts or when spawned
@@ -45,26 +47,64 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 	InputComponent->BindAxis("MoveForward", this, &AAnimTestCharacter_j::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAnimTestCharacter_j::MoveRight);
+
 	InputComponent->BindAxis("ActRoll", this, &AAnimTestCharacter_j::ActRoll);
 
+	InputComponent->BindAction("Sit", IE_Pressed, this, &AAnimTestCharacter_j::Sit);
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &AAnimTestCharacter_j::Sprint);
 	InputComponent->BindAction("Sprint", IE_Released, this, &AAnimTestCharacter_j::StopSprinting);
 }
 
-void AAnimTestCharacter_j::MoveForward(float AxisValue)
+void AAnimTestCharacter_j::MoveForward(float value)
 {
-	AddMovementInput(GetActorForwardVector(), AxisValue);
+	if ((Controller != NULL) && (value != 0.0f))
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, value);
+	}
 }
-void AAnimTestCharacter_j::MoveRight(float AxisValue)
+void AAnimTestCharacter_j::MoveRight(float value)
 {
-	AddMovementInput(GetActorRightVector(), AxisValue);
+	if ((Controller != NULL) && (value != 0.0f))
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, value);
+	}
 }
-void AAnimTestCharacter_j::ActRoll(float AxisValue)
+
+// 앉기 기능 활성화, 비 활성화
+// GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+void AAnimTestCharacter_j::Sit()
 {
-	AddMovementInput(GetActorForwardVector(), AxisValue);
+	if ((Controller != NULL) && !isSit)
+	{
+		Crouch();
+		isSit = true;
+	}
+	else
+	{
+		UnCrouch();
+		isSit = false;
+	}
+}
+
+void AAnimTestCharacter_j::ActRoll(float value)
+{
+	AddMovementInput(GetActorForwardVector(), value);
 }
 void AAnimTestCharacter_j::Sprint()
 {
-	//GetCharacterMovement()->
+	GetCharacterMovement()->MaxWalkSpeed += SprintSpeed;
+}
+void AAnimTestCharacter_j::StopSprinting()
+{
+	GetCharacterMovement()->MaxWalkSpeed -= SprintSpeed;
 }
 
