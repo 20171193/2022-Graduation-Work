@@ -4,7 +4,8 @@
 #include "MyTestActor_E.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "Graduation_0213Character.h"
+#include "BasedCharacter_E.h"
+#include "TestCharacter.h"
 #include "Engine.h"
 
 // Sets default values
@@ -42,7 +43,8 @@ void AMyTestActor_E::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult&
 	SweepResult)
 {
-	if (OtherActor->IsA(AGraduation_0213Character::StaticClass()))
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Collision Touch"));
+	if (OtherActor->IsA(ATestCharacter::StaticClass()))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Collision Touch"));
 		Destroy();
