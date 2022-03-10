@@ -37,5 +37,31 @@ void AColliBox::Tick(float DeltaTime)
 void AColliBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Collision Touch"));
+	FIre();
+}
+
+void AColliBox::FIre()
+{
+	FVector BoxLocation = GetActorLocation();
+	FRotator BoxRotation = GetActorRotation();
+
+	FVector MuzzleLocation = BoxLocation + FTransform(BoxLocation).TransformVector(MuzzleOffset);
+	FRotator MuzzleRotation = BoxRotation;
+
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+
+		AProjectile_E* Projectile = World->SpawnActor<AProjectile_E>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+		if (Projectile)
+		{
+			FVector LaunchDirection = MuzzleRotation.Vector();
+			Projectile->FireInDirection(LaunchDirection);
+		}
+	}
+
 }
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Projectile_E.h"
 #include "ColliBox.generated.h"
 
 UCLASS()
@@ -30,5 +31,14 @@ public:
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult&
 			SweepResult);
+
+	UFUNCTION()
+		void FIre();
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "GamePlay")
+		FVector MuzzleOffset;
+
+	UPROPERTY(EditDefaultsOnly,Category = "Projectile")
+		TSubclassOf<AProjectile_E> ProjectileClass;
 
 };
