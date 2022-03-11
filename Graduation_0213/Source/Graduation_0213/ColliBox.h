@@ -27,7 +27,7 @@ public:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite)
 	class UBoxComponent* CollisionBox;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "OnOverlapBegin_E")
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult&
 			SweepResult);

@@ -2,6 +2,7 @@
 
 
 #include "ColliBox.h"
+#include "MyTestActor_E.h"
 #include "Components/BoxComponent.h"
 #include "Engine/Engine.h"
 
@@ -36,8 +37,16 @@ void AColliBox::Tick(float DeltaTime)
 
 void AColliBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Collision Touch"));
-	FIre();
+	if (OtherActor->IsA(AMyTestActor_E::StaticClass()))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Collision Touch"));
+	}
+	/*FTimerHandle WaitHandle;
+	float WaitTime;
+	GetWorld()->GetTimerManager().SetTimer(WaitHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			FIre();
+		}), WaitTime, false);**/
 }
 
 void AColliBox::FIre()
