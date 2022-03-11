@@ -26,12 +26,24 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(VisibleAnywhere)
+	class USpringArmComponent* CameraSpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	class UCameraComponent* CameraComponent;
+
 	UFUNCTION()
 	void MoveForward(float value);
 	
 	UFUNCTION()
 	void MoveRight(float value);
 	
+	UFUNCTION()
+	void StartJump();
+	
+	UFUNCTION()
+	void StopJump();
+
 	UFUNCTION()
 	void ActRoll(float value);
 
@@ -42,18 +54,32 @@ public:
 	bool isSit;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
-	float SprintSpeed;
+	float sprintSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float maxStamina;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float currentStamina;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool sprintAble;
+
+private:
 
 protected:
 	void Sprint();
 	void StopSprinting();
 
-public:
-	UPROPERTY(VisibleAnywhere)
-	class USpringArmComponent* CameraSpringArmComponent;
+	void ConsumeStamina();
 
-	UPROPERTY(VisibleAnywhere)
-	class UCameraComponent* CameraComponent;
+	// 탈진상태 회복모드 / 그 외 회복모드
+	void RecoverStamina();
 
+	FTimerHandle staminaTH;
+	int callStaminaCount;
 
+	// 스테미너 모두 소진 시 활용
+	FTimerHandle waitHandle;
+	int waitCount;
 };

@@ -7,18 +7,28 @@
 
 UATCAnimInstance_j::UATCAnimInstance_j()
 {
-	CurrentPawnSpeed = 0.0f;
+	isSit = false;
+	currentPawnSpeed = 0.0f;
+}
+
+void UATCAnimInstance_j::NativeBeginPlay()
+{
+	Super::NativeBeginPlay();
+	APawn* Pawn = TryGetPawnOwner();
+	if (::IsValid(Pawn))
+	{
+		character = Cast<AAnimTestCharacter_j>(Pawn);
+	}
 }
 
 void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	auto Pawn = TryGetPawnOwner();
-	if (::IsValid(Pawn))
+	if (::IsValid(character))
 	{
-		CurrentPawnSpeed = Pawn->GetVelocity().Size();
-
-		isSit = Pawn->GetMovementComponent()->IsCrouching();
+		currentPawnSpeed = character->GetVelocity().Size();
+		isSit = character->GetMovementComponent()->IsCrouching();
+		isInAir = character->GetCharacterMovement()->IsFalling();
 	}
 }
