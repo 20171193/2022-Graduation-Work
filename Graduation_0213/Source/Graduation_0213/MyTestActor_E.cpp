@@ -17,12 +17,21 @@ AMyTestActor_E::AMyTestActor_E()
 	mStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OBJ"));
 	RootComponent = mStaticMesh;
 
-	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
-	CollisionSphere->InitSphereRadius(100.0f);
-	CollisionSphere->SetupAttachment(RootComponent);
+	//CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
+	//CollisionSphere->InitSphereRadius(100.0f);
+	//CollisionSphere->SetupAttachment(RootComponent);
 
-	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AMyTestActor_E::OnOverlapBegin);
+	CollisionBox_Y = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox_Y"));
+	CollisionBox_Y->InitBoxExtent(FVector(100.0f,100.0f,100.0f));
+	CollisionBox_Y->SetupAttachment(RootComponent);
 
+	CollisionBox_X = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox_X"));
+	CollisionBox_X->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
+	CollisionBox_X->SetupAttachment(RootComponent);
+
+	//CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AMyTestActor_E::OnOverlapBegin);
+	CollisionBox_Y->OnComponentBeginOverlap.AddDynamic(this, &AMyTestActor_E::OnOverlapBegin);
+	CollisionBox_X->OnComponentBeginOverlap.AddDynamic(this, &AMyTestActor_E::OnOverlapBegin);
 }
 
 
@@ -44,9 +53,9 @@ void AMyTestActor_E::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	SweepResult)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Collision Touch"));
-	if (OtherActor->IsA(ATestCharacter::StaticClass()))
+	/*if (OtherActor->IsA(ATestCharacter::StaticClass()))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Collision Touch"));
 		Destroy();
-	}
+	}*/
 }

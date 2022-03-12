@@ -23,8 +23,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
-	class USphereComponent* CollisionSphere;
+	//UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	//class USphereComponent* CollisionSphere;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UBoxComponent* CollisionBox_Y;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UBoxComponent* CollisionBox_X;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* mStaticMesh;
