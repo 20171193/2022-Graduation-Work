@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "AnimTestCharacter_j.h"
 #include "Engine/Classes/Camera/CameraComponent.h"
 #include "Engine/Classes/Components/CapsuleComponent.h"
@@ -27,8 +26,8 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	//JumpMaxCount = 1;	// 점프 가능 횟수
 	//JumpMaxHoldTime = 0.5f;	// 체공 시간
 
-	maxStamina = 10.0f;
-	currentStamina = 10.0f;
+	maxStamina = 5.0f;
+	currentStamina = 5.0f;
 
 	// 스테미너 소진 카운트
 	callStaminaCount = 0;
@@ -36,6 +35,8 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	waitCount = 3;
 
 	sprintSpeed = 250.0f;
+	sprintAble = true;
+
 	isSit = false;
 }
 
@@ -63,6 +64,7 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AAnimTestCharacter_j::Jump);
 	InputComponent->BindAction("Sit", IE_Pressed, this, &AAnimTestCharacter_j::Sit);
+
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &AAnimTestCharacter_j::Sprint);
 	InputComponent->BindAction("Sprint", IE_Released, this, &AAnimTestCharacter_j::StopSprinting);
 }
@@ -121,60 +123,82 @@ void AAnimTestCharacter_j::ActRoll(float value)
 {
 	AddMovementInput(GetActorForwardVector(), value);
 }
+
+
 void AAnimTestCharacter_j::Sprint()
 {
-	// 탈진 상태가 아닌 경우
-	if (currentStamina > 0)
+	// 스테미너가 0인 경우
+	if (currentStamina <= 0)
 	{
-		// 달리는 중 ConsumeStamina 함수 1초에 1번 씩 maxStamina 만큼 실행
-		GetWorldTimerManager().SetTimer(staminaTH, this, &AAnimTestCharacter_j::ConsumeStamina, 1.0f, true, maxStamina);
-		GetCharacterMovement()->MaxWalkSpeed += sprintSpeed;
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Not yet Sprint");
 	}
+	// 스테미너가 0이 아닌 경우
 	else
 	{
-		UE_LOG(LogTemp, Log, TEXT("stamina = 0"));
-		StopSprinting();
+		// recover 타이머 해제
+		GetWorldTimerManager().ClearTimer(recoverTH);
+		GetWorldTimerManager().SetTimer(consumeTH, this, &AAnimTestCharacter_j::ConsumeStamina, 1.0f, true);
 	}
 }
 void AAnimTestCharacter_j::StopSprinting()
 {
-	if (currentStamina > 0)
+	if (currentStamina <= 0 && !sprintAble)
 	{
-		GetCharacterMovement()->MaxWalkSpeed -= sprintSpeed;
-		RecoverStamina();
+		// consume 타이머 해제
+		GetWorldTimerManager().ClearTimer(consumeTH);
+		GetWorld()->GetTimerManager().SetTimer(waitHandle, FTimerDelegate::CreateLambda([&]()
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 0.3f, FColor::Black, "Delay Finished");
+				// 딜레이 후 실행
+				GetWorld()->GetTimerManager().ClearTimer(waitHandle);
+				currentStamina += 3;
+				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 1.0f, true);
+				sprintAble = true;
+			}), waitCount, false);
 	}
-	else
+	else if(sprintAble)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = 0;
-		RecoverStamina();
+		// consume 타이머 해제
+		GetWorldTimerManager().ClearTimer(consumeTH);
+		GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 1.0f, true);
 	}
+	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 }
+
+// 스테미너 감소
 void AAnimTestCharacter_j::ConsumeStamina()
 {
-	//--currentStamina;
-	//// 탈진 상태일 경우 
-	//if (currentStamina <= 0)
-	//{
-	//	GetWorldTimerManager().ClearTimer(staminaTH);
-	//	RecoverStamina();
-	//}
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "consume start");
+	--currentStamina;
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(currentStamina));
+	// 스테미너 모두 소진 시 캐릭터의 속도 감소.
+	if (currentStamina <= 0)
+	{
+		currentStamina = 0;
+		sprintAble = false;
+		GetWorldTimerManager().ClearTimer(consumeTH);
+		GetCharacterMovement()->MaxWalkSpeed = 400.0f;
+	}
+	// 스테미너가 있을 경우 캐릭터의 속도 증가.
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 650.0f;
+	}
 }
+
+// 스테미너 회복
 void AAnimTestCharacter_j::RecoverStamina()
 {
-	//// 탈진 상태 회복모드
-	//if (currentStamina <= 0)
-	//{
-	//	// 탈진 딜레이 적용  
-	//	GetWorld()->GetTimerManager().SetTimer(waitHandle, FTimerDelegate::CreateLambda([&]()
-	//		{
-	//			GetWorld()->GetTimerManager().ClearTimer(waitHandle);
-	//		}), waitCount, false);
-	//	UE_LOG(LogTemp, Log, TEXT("delay finished"));
-	//}
-	//// 기본 회복모드
-	//else
-	//{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
+	++currentStamina;
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(currentStamina));
+	// 스테미너가 10 이상일 경우 recover 중지.
+	if (currentStamina >= 5)
+	{
+		currentStamina = 5;
+		GetWorldTimerManager().ClearTimer(recoverTH);
+	}
+	// 기본 회복모드
 
-	//}
 }
 

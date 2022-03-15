@@ -59,7 +59,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float maxStamina;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float currentStamina;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -76,7 +76,8 @@ protected:
 	// 탈진상태 회복모드 / 그 외 회복모드
 	void RecoverStamina();
 
-	FTimerHandle staminaTH;
+	FTimerHandle consumeTH;
+	FTimerHandle recoverTH;
 	int callStaminaCount;
 
 	// 스테미너 모두 소진 시 활용
