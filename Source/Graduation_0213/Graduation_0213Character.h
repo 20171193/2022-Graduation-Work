@@ -16,8 +16,9 @@ class AGraduation_0213Character : public ACharacter
 	class USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))//meta = (AllowPrivateAccess = "true")
 	class UCameraComponent* FollowCamera;
+
 public:
 	AGraduation_0213Character();
 
