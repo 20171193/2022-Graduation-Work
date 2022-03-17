@@ -45,16 +45,25 @@ public:
 	void StopJump();
 
 	UFUNCTION()
-	void ActRoll(float value);
+	void ActRoll();
 
 	UFUNCTION()
 	void Sit();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool isSit;
+	bool rollAble;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool sitAble;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
 	float sprintSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
+	float walkSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool sprintAble;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float maxStamina;
@@ -62,8 +71,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float currentStamina;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool sprintAble;
+	UFUNCTION(BlueprintCallable)
+	float GetMaxStamina();
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentStamina();
 
 private:
 

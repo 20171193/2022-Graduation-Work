@@ -34,6 +34,4 @@ public:
 
 	UFUNCTION()
 		void ActRoll(float AxisValue);
-
-
 };

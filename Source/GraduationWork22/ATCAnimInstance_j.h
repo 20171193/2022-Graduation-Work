@@ -15,12 +15,18 @@ class GRADUATIONWORK22_API UATCAnimInstance_j : public UAnimInstance
 	GENERATED_BODY()
 public:
 	UATCAnimInstance_j();
+	
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	// 구르기 애니메이션 실행
+	void PlayRollMontage();
 
 private:
 	AAnimTestCharacter_j* character;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Roll", Meta = (AllowPrivateAccess = true))
+	UAnimMontage* rollMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
 	float currentPawnSpeed;

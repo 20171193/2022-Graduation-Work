@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "ATCAnimInstance_j.h"
 #include "AnimTestCharacter_j.h"
 #include "Engine/Classes/Camera/CameraComponent.h"
 #include "Engine/Classes/Components/CapsuleComponent.h"
@@ -34,10 +35,13 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	// 스테미너 소진 시 딜레이
 	waitCount = 3;
 
-	sprintSpeed = 250.0f;
-	sprintAble = true;
+	sprintSpeed = 650.0f;
+	walkSpeed = 400.0f;
 
-	isSit = false;
+	sprintAble = true;
+	rollAble = true;
+
+	sitAble = true;
 }
 
 // Called when the game starts or when spawned
@@ -60,8 +64,7 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	InputComponent->BindAxis("MoveForward", this, &AAnimTestCharacter_j::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAnimTestCharacter_j::MoveRight);
 
-	InputComponent->BindAxis("ActRoll", this, &AAnimTestCharacter_j::ActRoll);
-
+	InputComponent->BindAction("ActRoll", IE_Pressed, this, &AAnimTestCharacter_j::ActRoll);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AAnimTestCharacter_j::Jump);
 	InputComponent->BindAction("Sit", IE_Pressed, this, &AAnimTestCharacter_j::Sit);
 
@@ -107,21 +110,30 @@ void AAnimTestCharacter_j::StopJump()
 
 void AAnimTestCharacter_j::Sit()
 {
-	if ((Controller != NULL) && !isSit)
+	if ((Controller != NULL) && sitAble)
 	{
 		Crouch();
-		isSit = true;
 	}
 	else
 	{
 		UnCrouch();
-		isSit = false;
 	}
 }
 
-void AAnimTestCharacter_j::ActRoll(float value)
+void AAnimTestCharacter_j::ActRoll()
 {
-	AddMovementInput(GetActorForwardVector(), value);
+	if (rollAble)
+	{
+		//auto AnimInstance = Cast<UATCAnimInstance_j>(GetMesh()->GetAnimInstance());
+		//if (AnimInstance == nullptr)
+			//return;
+		//AnimInstance->PlayRollMontage();
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Rolling");
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No Rolling");
+	}
 }
 
 
@@ -137,7 +149,8 @@ void AAnimTestCharacter_j::Sprint()
 	{
 		// recover 타이머 해제
 		GetWorldTimerManager().ClearTimer(recoverTH);
-		GetWorldTimerManager().SetTimer(consumeTH, this, &AAnimTestCharacter_j::ConsumeStamina, 1.0f, true);
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "consume start");
+		GetWorldTimerManager().SetTimer(consumeTH, this, &AAnimTestCharacter_j::ConsumeStamina, 0.1f, true);
 	}
 }
 void AAnimTestCharacter_j::StopSprinting()
@@ -152,7 +165,8 @@ void AAnimTestCharacter_j::StopSprinting()
 				// 딜레이 후 실행
 				GetWorld()->GetTimerManager().ClearTimer(waitHandle);
 				currentStamina += 3;
-				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 1.0f, true);
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
+				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 				sprintAble = true;
 			}), waitCount, false);
 	}
@@ -160,38 +174,39 @@ void AAnimTestCharacter_j::StopSprinting()
 	{
 		// consume 타이머 해제
 		GetWorldTimerManager().ClearTimer(consumeTH);
-		GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 1.0f, true);
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
+		GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 	}
-	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
 
 // 스테미너 감소
 void AAnimTestCharacter_j::ConsumeStamina()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "consume start");
-	--currentStamina;
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(currentStamina));
+
+	if (this->GetVelocity().Size() >= 600.0f)
+	{
+		currentStamina -= 0.1f;
+	}
 	// 스테미너 모두 소진 시 캐릭터의 속도 감소.
 	if (currentStamina <= 0)
 	{
 		currentStamina = 0;
 		sprintAble = false;
 		GetWorldTimerManager().ClearTimer(consumeTH);
-		GetCharacterMovement()->MaxWalkSpeed = 400.0f;
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	}
 	// 스테미너가 있을 경우 캐릭터의 속도 증가.
 	else
 	{
-		GetCharacterMovement()->MaxWalkSpeed = 650.0f;
+		GetCharacterMovement()->MaxWalkSpeed = sprintSpeed;
 	}
 }
 
 // 스테미너 회복
 void AAnimTestCharacter_j::RecoverStamina()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
-	++currentStamina;
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(currentStamina));
+	currentStamina+=0.1f;
 	// 스테미너가 10 이상일 경우 recover 중지.
 	if (currentStamina >= 5)
 	{
@@ -199,6 +214,13 @@ void AAnimTestCharacter_j::RecoverStamina()
 		GetWorldTimerManager().ClearTimer(recoverTH);
 	}
 	// 기본 회복모드
-
+}
+float AAnimTestCharacter_j::GetMaxStamina()
+{
+	return maxStamina;
 }
 
+float AAnimTestCharacter_j::GetCurrentStamina()
+{
+	return currentStamina;
+}
