@@ -18,7 +18,6 @@ public:
 
 	
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -29,12 +28,30 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-private:
-	//UPROPERTY(VisibleAnywhere)
-    //class UCapsuleComponent* CapsuleComponent;
-	
-	UCapsuleComponent* CapsuleComponent;
 
-		UFUNCTION()
-	void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+private:
+	
+UFUNCTION()
+void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+public:
+
+UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+FVector MonsterLocation;
+
+UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+FRotator MonsterRotation;
+
+UFUNCTION()
+void Timer(float waitTimer);
+FTimerHandle WaitHandle;
+
+FActorSpawnParameters SpawnInfo;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite,Category = "Move")
+		bool on = true;
+	UFUNCTION(BlueprintImplementableEvent)
+		void Respone();
+
+
 };
