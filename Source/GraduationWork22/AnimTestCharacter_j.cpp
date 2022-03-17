@@ -124,11 +124,12 @@ void AAnimTestCharacter_j::ActRoll()
 {
 	if (rollAble)
 	{
-		//auto AnimInstance = Cast<UATCAnimInstance_j>(GetMesh()->GetAnimInstance());
-		//if (AnimInstance == nullptr)
-			//return;
-		//AnimInstance->PlayRollMontage();
-		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Rolling");
+		auto AnimInstance = Cast<UATCAnimInstance_j>(GetMesh()->GetAnimInstance());
+		if (AnimInstance == nullptr)
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No AnimInstance");
+
+		AnimInstance->PlayRollMontage();
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Rolling");
 	}
 	else
 	{

@@ -7,15 +7,15 @@
 
 UATCAnimInstance_j::UATCAnimInstance_j()
 {
-	//static ConstructorHelpers::FObjectFinder<UAnimMontage> ROLL_MONTAGE(TEXT("/Game/ShimJaeChun/Anim_j/Rolling.Rolling'"));
-	//if (ROLL_MONTAGE.Succeeded())
-	//{
-	//	rollMontage = ROLL_MONTAGE.Object;
-	//}
-	//else
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Montage error");
-	//}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ROLL_MONTAGE(TEXT("AnimMontage'/Game/ShimJaeChun/Anim_j/RollMontage.RollMontage'"));
+	if (ROLL_MONTAGE.Succeeded())
+	{
+		rollMontage = ROLL_MONTAGE.Object;
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Montage error");
+	}
 	isSit = false;
 	currentPawnSpeed = 0.0f;
 }
