@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ATCAnimInstance_j.h"
 #include "AnimTestCharacter_j.h"
+#include "ATCAnimInstance_j.h"
 #include "Engine/Classes/Camera/CameraComponent.h"
 #include "Engine/Classes/Components/CapsuleComponent.h"
 #include "Engine/Classes/GameFramework/SpringArmComponent.h"
