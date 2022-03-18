@@ -45,25 +45,37 @@ public:
 	void StopJump();
 
 	UFUNCTION()
-	void ActRoll(float value);
+	void ActRoll();
 
 	UFUNCTION()
 	void Sit();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool isSit;
+	bool rollAble;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool sitAble;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
 	float sprintSpeed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float maxStamina;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float currentStamina;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
+	float walkSpeed;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool sprintAble;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float maxStamina;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float currentStamina;
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxStamina();
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentStamina();
 
 private:
 
@@ -76,7 +88,8 @@ protected:
 	// 탈진상태 회복모드 / 그 외 회복모드
 	void RecoverStamina();
 
-	FTimerHandle staminaTH;
+	FTimerHandle consumeTH;
+	FTimerHandle recoverTH;
 	int callStaminaCount;
 
 	// 스테미너 모두 소진 시 활용
