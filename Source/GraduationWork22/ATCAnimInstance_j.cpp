@@ -45,6 +45,7 @@ void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 		isSit = character->GetMovementComponent()->IsCrouching();
 		isInAir = character->GetCharacterMovement()->IsFalling();
 
+
 		// 점프, 공중에 떠 있는 경우 예외처리
 		if (isInAir)
 		{
