@@ -85,14 +85,14 @@ protected:
 
 	void ConsumeStamina();
 
-	// 탈진상태 회복모드 / 그 외 회복모드
+	//
 	void RecoverStamina();
 
 	FTimerHandle consumeTH;
 	FTimerHandle recoverTH;
 	int callStaminaCount;
 
-	// 스테미너 모두 소진 시 활용
+	//
 	FTimerHandle waitHandle;
 	int waitCount;
 };
