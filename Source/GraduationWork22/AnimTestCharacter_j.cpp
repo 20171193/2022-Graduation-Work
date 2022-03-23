@@ -37,6 +37,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 
 	sprintSpeed = 650.0f;
 	walkSpeed = 400.0f;
+	pushSpeed = 200.0f;
 
 	sprintAble = true;
 	rollAble = true;
@@ -45,6 +46,8 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	isRoll = false;
 	
 	isLadder = false;
+	climbable = false;
+	isPush = false;
 }
 
 // Called when the game starts or when spawned
@@ -87,12 +90,13 @@ void AAnimTestCharacter_j::MoveForward(float value)
 	}
 	else if ((Controller != NULL) && (value != 0.0f) && isLadder)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "is Ladder");
 		AddMovementInput(FVector::UpVector, value);
 	}
 }
 void AAnimTestCharacter_j::MoveRight(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) /*&& !isRoll*/)
+	if ((Controller != NULL) && (value != 0.0f) && !isLadder/*&& !isRoll*/)
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -150,18 +154,20 @@ void AAnimTestCharacter_j::ActRoll()
 
 void AAnimTestCharacter_j::Sprint()
 {
-	// 스테미너가 0인 경우
-	if (currentStamina <= 0)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Not yet Sprint");
-	}
-	// 스테미너가 0이 아닌 경우
-	else
-	{
-		// recover 타이머 해제
-		GetWorldTimerManager().ClearTimer(recoverTH);
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "consume start");
-		GetWorldTimerManager().SetTimer(consumeTH, this, &AAnimTestCharacter_j::ConsumeStamina, 0.1f, true);
+	if (!isPush)
+	{ // 스테미너가 0인 경우
+		if (currentStamina <= 0)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Not yet Sprint");
+		}
+		// 스테미너가 0이 아닌 경우
+		else
+		{
+			// recover 타이머 해제
+			GetWorldTimerManager().ClearTimer(recoverTH);
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "consume start");
+			GetWorldTimerManager().SetTimer(consumeTH, this, &AAnimTestCharacter_j::ConsumeStamina, 0.1f, true);
+		}
 	}
 }
 void AAnimTestCharacter_j::StopSprinting()
@@ -180,15 +186,14 @@ void AAnimTestCharacter_j::StopSprinting()
 				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 				sprintAble = true;
 			}), waitCount, false);
+		}
+		else if (sprintAble)
+		{
+			// consume 타이머 해제
+			GetWorldTimerManager().ClearTimer(consumeTH);
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
+			GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 	}
-	else if(sprintAble)
-	{
-		// consume 타이머 해제
-		GetWorldTimerManager().ClearTimer(consumeTH);
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
-		GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
-	}
-	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
 
 // 스테미너 감소
@@ -217,6 +222,8 @@ void AAnimTestCharacter_j::ConsumeStamina()
 // 스테미너 회복
 void AAnimTestCharacter_j::RecoverStamina()
 {
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+
 	currentStamina+=0.1f;
 	// 스테미너가 10 이상일 경우 recover 중지.
 	if (currentStamina >= 5)

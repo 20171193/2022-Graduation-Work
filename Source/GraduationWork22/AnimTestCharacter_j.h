@@ -61,13 +61,23 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool isLadder;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool climbable;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool isPush;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
 	float sprintSpeed;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
 	float walkSpeed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
+	float pushSpeed;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool sprintAble;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
