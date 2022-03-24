@@ -213,17 +213,27 @@ void AAnimTestCharacter_j::ConsumeStamina()
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	}
 	// 스테미너가 있을 경우 캐릭터의 속도 증가.
-	else
+	else if(!isPush)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = sprintSpeed;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = pushSpeed;
 	}
 }
 
 // 스테미너 회복
 void AAnimTestCharacter_j::RecoverStamina()
 {
-	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
-
+	if (!isPush)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+	}
+	else 
+	{
+		GetCharacterMovement()->MaxWalkSpeed = pushSpeed;
+	}
 	currentStamina+=0.1f;
 	// 스테미너가 10 이상일 경우 recover 중지.
 	if (currentStamina >= 5)
