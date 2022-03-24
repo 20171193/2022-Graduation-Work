@@ -19,7 +19,7 @@ public:
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
-	// 구르기 애니메이션 실행
+	// 
 	void PlayRollMontage();
 
 private:

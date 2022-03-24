@@ -21,7 +21,7 @@ protected:
 	UUserWidget* CurrentWidget;
 
 
-	// 타입을 UUserWidget으로 제한
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMG Game")
 	TSubclassOf<UUserWidget> HUDWidget;
 };
