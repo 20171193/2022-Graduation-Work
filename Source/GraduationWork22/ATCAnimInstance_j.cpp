@@ -45,20 +45,32 @@ void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 		isSit = character->GetMovementComponent()->IsCrouching();
 		isInAir = character->GetCharacterMovement()->IsFalling();
 
-		// 
+		if (Montage_IsPlaying(rollMontage))
+		{
+			character->isRoll = true;
+		}
+		else
+		{
+			character->isRoll = false;
+		}
+
+		// 점프, 공중에 떠 있는 경우 예외처리
 		if (isInAir)
 		{
 			character->sitAble = false;
 			character->rollAble = false;
+			
+			// 앉은 상태로 낙하할 경우
 			if (isSit)
 			{
 				character->sitAble = true;
 				character->UnCrouch();
 			}
 		}
+		// 공중에 떠 있지 않은 경우
 		else
 		{
-			//
+			// 앉은 경우 재 입력 방지
 			if (isSit)
 			{
 				character->sitAble = false;

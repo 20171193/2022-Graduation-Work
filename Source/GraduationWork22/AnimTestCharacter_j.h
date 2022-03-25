@@ -10,7 +10,6 @@ UCLASS()
 class GRADUATIONWORK22_API AAnimTestCharacter_j : public ACharacter
 {
 	GENERATED_BODY()
-
 public:
 	// Sets default values for this character's properties
 	AAnimTestCharacter_j();
@@ -51,10 +50,22 @@ public:
 	void Sit();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool isRoll;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool rollAble;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool sitAble;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool isLadder;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool climbable;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool isPush;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
 	float sprintSpeed;
@@ -62,7 +73,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
 	float walkSpeed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
+	float pushSpeed;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool sprintAble;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -77,22 +92,35 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentStamina();
 
-private:
-
 protected:
+	UFUNCTION()
 	void Sprint();
+
+	UFUNCTION()
 	void StopSprinting();
 
+	UFUNCTION()
 	void ConsumeStamina();
 
-	//
+	// 탈진상태 회복모드 / 그 외 회복모드
+	
+	UFUNCTION()
 	void RecoverStamina();
 
+	UPROPERTY()
 	FTimerHandle consumeTH;
+	
+	UPROPERTY()
 	FTimerHandle recoverTH;
+	
+	UPROPERTY()
 	int callStaminaCount;
 
-	//
+	
+	// 스테미너 모두 소진 시 활용
+	UPROPERTY()
 	FTimerHandle waitHandle;
+	
+	UPROPERTY()
 	int waitCount;
 };
