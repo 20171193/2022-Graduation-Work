@@ -27,6 +27,8 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	//JumpMaxCount = 1;	// 점프 가능 횟수
 	//JumpMaxHoldTime = 0.5f;	// 체공 시간
 
+	currentMoveMode = EMoveMode::QuarterViewMode;
+
 	maxStamina = 5.0f;
 	currentStamina = 5.0f;
 
