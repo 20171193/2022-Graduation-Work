@@ -9,6 +9,8 @@
 /**
  * 
  */
+
+
 UCLASS()
 class GRADUATIONWORK22_API UATCAnimInstance_j : public UAnimInstance
 {
@@ -21,6 +23,9 @@ public:
 
 	// 
 	void PlayRollMontage();
+
+	UPROPERTY(EditAnywhere)
+	EMoveMode moveMode;
 
 private:
 	AAnimTestCharacter_j* character;
@@ -36,4 +41,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
 	bool isInAir;
+
+
 };
