@@ -11,31 +11,42 @@ AObstacle_K::AObstacle_K()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	//Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger"));	
+	
 	ObstacleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ObstacleMesh"));
 	RootComponent = Scene;
 	ObstacleMesh->SetupAttachment(Scene);
 	ObstacleMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	ObstacleMesh->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-   
-	//Trigger->SetupAttachment(Scene);
-
-
-	//Trigger->OnComponentBeginOverlap.AddDynamic(this, &AObstacle_K::OnOverlapBegin);
-
+	Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger"));
+	Trigger->OnComponentBeginOverlap.AddDynamic(this, &AObstacle_K::OnOverlapBegin);
 }
+
+
+
+
 
 // Called when the game starts or when spawned
 void AObstacle_K::BeginPlay()
 {
 	Super::BeginPlay();
+
 	
+
 }
 
 // Called every frame
 void AObstacle_K::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
+void AObstacle_K::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+	
+	
+	if (OtherActor && (OtherActor != this) && OtherComp) {
+		if (OtherActor->ActorHasTag(TEXT("PLAYER"))) {
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("I Hit:Player")));
+		}
+	}
+}
