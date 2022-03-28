@@ -6,9 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Obstacle_K.generated.h"
 
-class UBoxComponent;
-class UStaticMeshComponent;
-class USceneComponent;
 
 UCLASS()
 class GRADUATIONWORK22_API AObstacle_K : public AActor
@@ -27,16 +24,23 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-		 UBoxComponent* Trigger;
+	UPROPERTY(BlueprintReadOnly,EditAnywhere)
+		class UBoxComponent* Box;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-		 UStaticMeshComponent* ObstacleMesh;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+		class UStaticMeshComponent* ObstacleMesh;
 
-	UPROPERTY(EditAnywhere)
-		 USceneComponent* Scene;
+	UPROPERTY(BlueprintReadOnly,EditAnywhere)
+		class USceneComponent* SceneLoot;
 
 	UFUNCTION()
 		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+
+
+	 UFUNCTION(BlueprintCallable, Category = "Active")
+		 void ActiveTrue();
+
+	 UFUNCTION(BlueprintCallable, Category = "Active")
+		 void ActiveFalse();
 };
