@@ -12,7 +12,8 @@ enum class EMoveMode : uint8
 	normal,
 	QuarterViewMode UMETA(DisplayName = "QuarterViewMode"),
 	SideViewMode UMETA(DisplayName = "SideViewMode"),
-	TopViewMode UMETA(DisplayName = "TopViewMode")
+	TopViewMode UMETA(DisplayName = "TopViewMode"),
+	BackViewMode UMETA(DisplayName = "BackViewMode")
 };
 
 UCLASS()
@@ -37,7 +38,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	class USpringArmComponent* CameraSpringArmComponent;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UCameraComponent* CameraComponent;
 
 	UFUNCTION()

@@ -73,7 +73,8 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	InputComponent->BindAxis("MoveRight", this, &AAnimTestCharacter_j::MoveRight);
 
 	InputComponent->BindAction("ActRoll", IE_Pressed, this, &AAnimTestCharacter_j::ActRoll);
-	InputComponent->BindAction("Jump", IE_Pressed, this, &AAnimTestCharacter_j::Jump);
+	InputComponent->BindAction("Jump", IE_Pressed, this, &AAnimTestCharacter_j::StartJump);
+	InputComponent->BindAction("Jump", IE_Released, this, &AAnimTestCharacter_j::StopJump);
 	InputComponent->BindAction("Sit", IE_Pressed, this, &AAnimTestCharacter_j::Sit);
 
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &AAnimTestCharacter_j::Sprint);
@@ -82,7 +83,7 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void AAnimTestCharacter_j::MoveForward(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) && !isLadder/*&& !isRoll*/)
+	if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -90,7 +91,7 @@ void AAnimTestCharacter_j::MoveForward(float value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, value);
 	}
-	else if ((Controller != NULL) && (value != 0.0f) && isLadder)
+	else if ((Controller != NULL) && (value != 0.0f) && isLadder && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "is Ladder");
 		AddMovementInput(FVector::UpVector, value);
@@ -98,7 +99,7 @@ void AAnimTestCharacter_j::MoveForward(float value)
 }
 void AAnimTestCharacter_j::MoveRight(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) && !isLadder/*&& !isRoll*/)
+	if ((Controller != NULL) && (value != 0.0f) && !isLadder )
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -110,7 +111,10 @@ void AAnimTestCharacter_j::MoveRight(float value)
 
 void AAnimTestCharacter_j::StartJump()
 {
-	bPressedJump = true;
+	if (currentMoveMode != EMoveMode::TopViewMode)
+	{
+		bPressedJump = true;
+	}
 }
 
 void AAnimTestCharacter_j::StopJump()
