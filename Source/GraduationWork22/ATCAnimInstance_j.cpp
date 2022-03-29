@@ -45,14 +45,14 @@ void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 		isSit = character->GetMovementComponent()->IsCrouching();
 		isInAir = character->GetCharacterMovement()->IsFalling();
 
-		if (Montage_IsPlaying(rollMontage))
-		{
-			character->isRoll = true;
-		}
-		else
-		{
-			character->isRoll = false;
-		}
+		//if (Montage_IsPlaying(rollMontage))
+		//{
+		//	character->isRoll = true;
+		//}
+		//else
+		//{
+		//	character->isRoll = false;
+		//}
 
 		// 점프, 공중에 떠 있는 경우 예외처리
 		if (isInAir)

@@ -99,12 +99,20 @@ void AAnimTestCharacter_j::MoveForward(float value)
 }
 void AAnimTestCharacter_j::MoveRight(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) && !isLadder )
+	if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, value);
+	}
+	else if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode == EMoveMode::SideViewMode))
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, value);
 	}
 }
@@ -139,22 +147,22 @@ void AAnimTestCharacter_j::Sit()
 
 void AAnimTestCharacter_j::ActRoll()
 {
-	if (rollAble)
-	{
-		auto AnimInstance = Cast<UATCAnimInstance_j>(GetMesh()->GetAnimInstance());
-		if (AnimInstance == nullptr)
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No AnimInstance");
+	//if (rollAble)
+	//{
+	//	auto AnimInstance = Cast<UATCAnimInstance_j>(GetMesh()->GetAnimInstance());
+	//	if (AnimInstance == nullptr)
+	//		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No AnimInstance");
 
-		//FVector rollingVector = this->GetActorForwardVector() * 1000.0f;
-		AnimInstance->PlayRollMontage();
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this->Controller, this->GetVelocity() * 1000.0f);
-		//this->LaunchCharacter(rollingVector, false, false);
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Rolling");
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No Rolling");
-	}
+	//	//FVector rollingVector = this->GetActorForwardVector() * 1000.0f;
+	//	AnimInstance->PlayRollMontage();
+	//	//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this->Controller, this->GetVelocity() * 1000.0f);
+	//	//this->LaunchCharacter(rollingVector, false, false);
+	//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Rolling");
+	//}
+	//else
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No Rolling");
+	//}
 }
 
 
