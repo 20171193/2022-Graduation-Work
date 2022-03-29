@@ -12,7 +12,7 @@
 // Sets default values
 AAnimTestCharacter_j::AAnimTestCharacter_j()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	CameraSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
@@ -46,7 +46,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 
 	sitAble = true;
 	isRoll = false;
-	
+
 	isLadder = false;
 	climbable = false;
 	isPush = false;
@@ -99,12 +99,20 @@ void AAnimTestCharacter_j::MoveForward(float value)
 }
 void AAnimTestCharacter_j::MoveRight(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) && !isLadder )
+	if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, value);
+	}
+	else if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode == EMoveMode::SideViewMode))
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, value);
 	}
 }
@@ -192,13 +200,13 @@ void AAnimTestCharacter_j::StopSprinting()
 				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 				sprintAble = true;
 			}), waitCount, false);
-		}
-		else if (sprintAble)
-		{
-			// consume 타이머 해제
-			GetWorldTimerManager().ClearTimer(consumeTH);
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
-			GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
+	}
+	else if (sprintAble)
+	{
+		// consume 타이머 해제
+		GetWorldTimerManager().ClearTimer(consumeTH);
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
+		GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 	}
 }
 
@@ -219,7 +227,7 @@ void AAnimTestCharacter_j::ConsumeStamina()
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	}
 	// 스테미너가 있을 경우 캐릭터의 속도 증가.
-	else if(!isPush)
+	else if (!isPush)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = sprintSpeed;
 	}
@@ -236,11 +244,11 @@ void AAnimTestCharacter_j::RecoverStamina()
 	{
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	}
-	else 
+	else
 	{
 		GetCharacterMovement()->MaxWalkSpeed = pushSpeed;
 	}
-	currentStamina+=0.1f;
+	currentStamina += 0.1f;
 	// 스테미너가 10 이상일 경우 recover 중지.
 	if (currentStamina >= 5)
 	{
