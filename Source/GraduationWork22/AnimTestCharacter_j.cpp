@@ -128,7 +128,11 @@ void AAnimTestCharacter_j::ActRoll()
 		if (AnimInstance == nullptr)
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No AnimInstance");
 
+		//FVector rollingVector = this->GetActorForwardVector() * 1000.0f;
+		GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 		AnimInstance->PlayRollMontage();
+
+		//this->LaunchCharacter(rollingVector, false, false);
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Rolling");
 	}
 	else
