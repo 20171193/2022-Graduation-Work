@@ -62,7 +62,7 @@ void AObstacle_K::ActiveFalse()
 {
 	this->SetActorTickEnabled(false);
 	this->SetActorHiddenInGame(true);
-	
+	this->SetActorEnableCollision(false);
 	
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Active false")));
 }
@@ -70,6 +70,6 @@ void AObstacle_K::ActiveTrue()
 {
 	this->SetActorTickEnabled(true);
 	this->SetActorHiddenInGame(false);
-
+	this->SetActorEnableCollision(true);
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Active true")));
 }
