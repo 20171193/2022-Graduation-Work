@@ -27,6 +27,8 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	//JumpMaxCount = 1;	// 점프 가능 횟수
 	//JumpMaxHoldTime = 0.5f;	// 체공 시간
 
+	currentMoveMode = EMoveMode::QuarterViewMode;
+
 	maxStamina = 5.0f;
 	currentStamina = 5.0f;
 
@@ -71,7 +73,8 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	InputComponent->BindAxis("MoveRight", this, &AAnimTestCharacter_j::MoveRight);
 
 	InputComponent->BindAction("ActRoll", IE_Pressed, this, &AAnimTestCharacter_j::ActRoll);
-	InputComponent->BindAction("Jump", IE_Pressed, this, &AAnimTestCharacter_j::Jump);
+	InputComponent->BindAction("Jump", IE_Pressed, this, &AAnimTestCharacter_j::StartJump);
+	InputComponent->BindAction("Jump", IE_Released, this, &AAnimTestCharacter_j::StopJump);
 	InputComponent->BindAction("Sit", IE_Pressed, this, &AAnimTestCharacter_j::Sit);
 
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &AAnimTestCharacter_j::Sprint);
@@ -80,7 +83,7 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void AAnimTestCharacter_j::MoveForward(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) && !isLadder/*&& !isRoll*/)
+	if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -88,7 +91,7 @@ void AAnimTestCharacter_j::MoveForward(float value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, value);
 	}
-	else if ((Controller != NULL) && (value != 0.0f) && isLadder)
+	else if ((Controller != NULL) && (value != 0.0f) && isLadder && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "is Ladder");
 		AddMovementInput(FVector::UpVector, value);
@@ -96,7 +99,7 @@ void AAnimTestCharacter_j::MoveForward(float value)
 }
 void AAnimTestCharacter_j::MoveRight(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) && !isLadder/*&& !isRoll*/)
+	if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -104,11 +107,22 @@ void AAnimTestCharacter_j::MoveRight(float value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, value);
 	}
+	else if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode == EMoveMode::SideViewMode))
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, value);
+	}
 }
 
 void AAnimTestCharacter_j::StartJump()
 {
-	bPressedJump = true;
+	if (currentMoveMode != EMoveMode::TopViewMode)
+	{
+		bPressedJump = true;
+	}
 }
 
 void AAnimTestCharacter_j::StopJump()
@@ -133,22 +147,22 @@ void AAnimTestCharacter_j::Sit()
 
 void AAnimTestCharacter_j::ActRoll()
 {
-	if (rollAble)
-	{
-		auto AnimInstance = Cast<UATCAnimInstance_j>(GetMesh()->GetAnimInstance());
-		if (AnimInstance == nullptr)
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No AnimInstance");
+	//if (rollAble)
+	//{
+	//	auto AnimInstance = Cast<UATCAnimInstance_j>(GetMesh()->GetAnimInstance());
+	//	if (AnimInstance == nullptr)
+	//		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No AnimInstance");
 
-		//FVector rollingVector = this->GetActorForwardVector() * 1000.0f;
-		AnimInstance->PlayRollMontage();
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this->Controller, this->GetVelocity() * 1000.0f);
-		//this->LaunchCharacter(rollingVector, false, false);
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Rolling");
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No Rolling");
-	}
+	//	//FVector rollingVector = this->GetActorForwardVector() * 1000.0f;
+	//	AnimInstance->PlayRollMontage();
+	//	//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this->Controller, this->GetVelocity() * 1000.0f);
+	//	//this->LaunchCharacter(rollingVector, false, false);
+	//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Rolling");
+	//}
+	//else
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No Rolling");
+	//}
 }
 
 

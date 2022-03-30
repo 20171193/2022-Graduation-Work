@@ -6,6 +6,16 @@
 #include "GameFramework/Character.h"
 #include "AnimTestCharacter_j.generated.h"
 
+UENUM(BlueprintType)
+enum class EMoveMode : uint8
+{
+	normal,
+	QuarterViewMode UMETA(DisplayName = "QuarterViewMode"),
+	SideViewMode UMETA(DisplayName = "SideViewMode"),
+	TopViewMode UMETA(DisplayName = "TopViewMode"),
+	BackViewMode UMETA(DisplayName = "BackViewMode")
+};
+
 UCLASS()
 class GRADUATIONWORK22_API AAnimTestCharacter_j : public ACharacter
 {
@@ -28,7 +38,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	class USpringArmComponent* CameraSpringArmComponent;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UCameraComponent* CameraComponent;
 
 	UFUNCTION()
@@ -48,6 +58,9 @@ public:
 
 	UFUNCTION()
 	void Sit();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	EMoveMode currentMoveMode;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool isRoll;
