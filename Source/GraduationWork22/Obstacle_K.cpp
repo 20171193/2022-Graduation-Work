@@ -49,7 +49,8 @@ void AObstacle_K::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 	//if (OtherActor && (OtherActor != this) && OtherComp) {
 		if (OtherActor->ActorHasTag(TEXT("PLAYER"))) {
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit:Player")));
-
+			this->SetActorHiddenInGame(true);
+			this->SetActorEnableCollision(false);
 		}
 
 
