@@ -62,7 +62,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	EMoveMode currentMoveMode;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool isRoll;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

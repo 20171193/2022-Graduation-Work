@@ -99,7 +99,7 @@ void AAnimTestCharacter_j::MoveForward(float value)
 }
 void AAnimTestCharacter_j::MoveRight(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode != EMoveMode::SideViewMode))
+	if ((Controller != NULL) && (value != 0.0f) && !isLadder  && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -107,7 +107,7 @@ void AAnimTestCharacter_j::MoveRight(float value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, value);
 	}
-	else if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode == EMoveMode::SideViewMode))
+	else if ((Controller != NULL) && (value != 0.0f) && !isLadder  && (currentMoveMode == EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
