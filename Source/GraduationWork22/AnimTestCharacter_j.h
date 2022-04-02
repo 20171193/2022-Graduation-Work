@@ -54,16 +54,7 @@ public:
 	void StopJump();
 
 	UFUNCTION()
-	void ActRoll();
-
-	UFUNCTION()
 	void Sit();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	EMoveMode currentMoveMode;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool isRoll;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool rollAble;
@@ -71,14 +62,23 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool sitAble;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool isLadder;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsLadder2;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool climbable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool climbable2;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool isPush;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsPushing2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isInSwamp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
+	float swampWalkSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
+	float swampSprintSpeed;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
 	float sprintSpeed;
@@ -89,15 +89,23 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
 	float pushSpeed;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Jump")
+	float swampjumpZvelocity;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Jump")
+	float jumpZvelocity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool sprintAble;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float maxStamina;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float currentStamina;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EMoveMode currentMoveMode;
 
 	UFUNCTION(BlueprintCallable)
 	float GetMaxStamina();
@@ -106,17 +114,17 @@ public:
 	float GetCurrentStamina();
 
 protected:
+	// 달리기 관련
 	UFUNCTION()
 	void Sprint();
 
 	UFUNCTION()
 	void StopSprinting();
 
+	// 스테미너 관련
 	UFUNCTION()
 	void ConsumeStamina();
 
-	// 탈진상태 회복모드 / 그 외 회복모드
-	
 	UFUNCTION()
 	void RecoverStamina();
 
