@@ -98,6 +98,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool sprintAble;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int playerHp;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float maxStamina;
 
