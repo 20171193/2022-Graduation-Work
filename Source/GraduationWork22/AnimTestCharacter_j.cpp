@@ -29,6 +29,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 
 	currentMoveMode = EMoveMode::QuarterViewMode;
 
+	playerHp = 5;
 	maxStamina = 5.0f;
 	currentStamina = 5.0f;
 
@@ -39,17 +40,23 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 
 	sprintSpeed = 650.0f;
 	walkSpeed = 400.0f;
+
+	swampSprintSpeed = 550.0f;
+	swampWalkSpeed = 300.0F;
+
 	pushSpeed = 200.0f;
+
+	swampjumpZvelocity = 350.0f;
+	jumpZvelocity = 500.0f;
 
 	sprintAble = true;
 	rollAble = true;
-
 	sitAble = true;
-	isRoll = false;
-	
-	isLadder = false;
-	climbable = false;
-	isPush = false;
+
+	IsLadder2 = false;
+	climbable2 = false;
+	IsPushing2 = false;
+	isInSwamp = false;
 }
 
 // Called when the game starts or when spawned
@@ -72,7 +79,6 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	InputComponent->BindAxis("MoveForward", this, &AAnimTestCharacter_j::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAnimTestCharacter_j::MoveRight);
 
-	InputComponent->BindAction("ActRoll", IE_Pressed, this, &AAnimTestCharacter_j::ActRoll);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AAnimTestCharacter_j::StartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &AAnimTestCharacter_j::StopJump);
 	InputComponent->BindAction("Sit", IE_Pressed, this, &AAnimTestCharacter_j::Sit);
@@ -83,7 +89,8 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void AAnimTestCharacter_j::MoveForward(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode != EMoveMode::SideViewMode))
+	// Normal Walking
+	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -91,7 +98,8 @@ void AAnimTestCharacter_j::MoveForward(float value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, value);
 	}
-	else if ((Controller != NULL) && (value != 0.0f) && isLadder && (currentMoveMode != EMoveMode::SideViewMode))
+	// Ladder climbing
+	else if ((Controller != NULL) && (value != 0.0f) && IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "is Ladder");
 		AddMovementInput(FVector::UpVector, value);
@@ -99,7 +107,8 @@ void AAnimTestCharacter_j::MoveForward(float value)
 }
 void AAnimTestCharacter_j::MoveRight(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode != EMoveMode::SideViewMode))
+	// Normal QuarterView Walking
+	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2  && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -107,7 +116,8 @@ void AAnimTestCharacter_j::MoveRight(float value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, value);
 	}
-	else if ((Controller != NULL) && (value != 0.0f) && !isLadder && (currentMoveMode == EMoveMode::SideViewMode))
+	// Normal SideView Walking
+	else if ((Controller != NULL) && (value != 0.0f) && !IsLadder2  && (currentMoveMode == EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -129,7 +139,6 @@ void AAnimTestCharacter_j::StopJump()
 {
 	bPressedJump = false;
 }
-
 // 앉기 기능 활성화, 비 활성화
 // GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
@@ -145,30 +154,9 @@ void AAnimTestCharacter_j::Sit()
 	}
 }
 
-void AAnimTestCharacter_j::ActRoll()
-{
-	//if (rollAble)
-	//{
-	//	auto AnimInstance = Cast<UATCAnimInstance_j>(GetMesh()->GetAnimInstance());
-	//	if (AnimInstance == nullptr)
-	//		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No AnimInstance");
-
-	//	//FVector rollingVector = this->GetActorForwardVector() * 1000.0f;
-	//	AnimInstance->PlayRollMontage();
-	//	//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this->Controller, this->GetVelocity() * 1000.0f);
-	//	//this->LaunchCharacter(rollingVector, false, false);
-	//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Rolling");
-	//}
-	//else
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "No Rolling");
-	//}
-}
-
-
 void AAnimTestCharacter_j::Sprint()
 {
-	if (!isPush)
+	if (!IsPushing2)
 	{ // 스테미너가 0인 경우
 		if (currentStamina <= 0)
 		{
@@ -214,7 +202,7 @@ void AAnimTestCharacter_j::StopSprinting()
 void AAnimTestCharacter_j::ConsumeStamina()
 {
 
-	if (this->GetVelocity().Size() >= 600.0f)
+	if (this->GetVelocity().Size() >= 300.0f)
 	{
 		currentStamina -= 0.1f;
 	}
@@ -224,29 +212,44 @@ void AAnimTestCharacter_j::ConsumeStamina()
 		currentStamina = 0;
 		sprintAble = false;
 		GetWorldTimerManager().ClearTimer(consumeTH);
-		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+		if (isInSwamp)
+		{
+			GetCharacterMovement()->MaxWalkSpeed = swampWalkSpeed;
+		}
+		else
+		{
+			GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+		}
 	}
 	// 스테미너가 있을 경우 캐릭터의 속도 증가.
-	else if(!isPush)
+	else if(isInSwamp)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = sprintSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = swampSprintSpeed;
+	}
+	else if (IsPushing2)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = pushSpeed;
 	}
 	else
 	{
-		GetCharacterMovement()->MaxWalkSpeed = pushSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = sprintSpeed;
 	}
 }
 
 // 스테미너 회복
 void AAnimTestCharacter_j::RecoverStamina()
 {
-	if (!isPush)
-	{
-		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
-	}
-	else 
+	if (IsPushing2)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = pushSpeed;
+	}
+	else if(isInSwamp)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = swampWalkSpeed;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	}
 	currentStamina+=0.1f;
 	// 스테미너가 10 이상일 경우 recover 중지.
@@ -265,4 +268,17 @@ float AAnimTestCharacter_j::GetMaxStamina()
 float AAnimTestCharacter_j::GetCurrentStamina()
 {
 	return currentStamina;
+}
+void AAnimTestCharacter_j::SetSwarmpMode(bool state)
+{
+	if (!state)
+	{
+		isInSwamp = false;
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+	}
+	else
+	{
+		isInSwamp = true;
+		GetCharacterMovement()->MaxWalkSpeed = swampWalkSpeed;
+	}
 }
