@@ -116,6 +116,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentStamina();
 
+	UFUNCTION(BlueprintCallable)
+	void SetSwarmpMode(bool state);
 protected:
 	// 달리기 관련
 	UFUNCTION()

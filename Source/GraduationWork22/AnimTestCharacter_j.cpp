@@ -269,3 +269,16 @@ float AAnimTestCharacter_j::GetCurrentStamina()
 {
 	return currentStamina;
 }
+void AAnimTestCharacter_j::SetSwarmpMode(bool state)
+{
+	if (!state)
+	{
+		isInSwamp = false;
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+	}
+	else
+	{
+		isInSwamp = true;
+		GetCharacterMovement()->MaxWalkSpeed = swampWalkSpeed;
+	}
+}

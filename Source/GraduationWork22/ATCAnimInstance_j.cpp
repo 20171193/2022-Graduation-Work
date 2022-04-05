@@ -35,6 +35,7 @@ void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 
 		isLadder = character->IsLadder2;
 		isPushing = character->IsPushing2;
+		isInswarmp = character->isInSwamp;
 
 		if (character->isInSwamp)
 		{
