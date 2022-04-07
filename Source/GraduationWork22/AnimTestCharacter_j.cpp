@@ -41,7 +41,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	sprintSpeed = 650.0f;
 	walkSpeed = 400.0f;
 
-	swampSprintSpeed = 550.0f;
+	swampSprintSpeed = 500.0f;
 	swampWalkSpeed = 300.0F;
 
 	pushSpeed = 200.0f;
