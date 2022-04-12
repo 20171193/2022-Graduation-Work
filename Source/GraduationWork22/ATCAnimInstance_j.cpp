@@ -7,22 +7,10 @@
 
 UATCAnimInstance_j::UATCAnimInstance_j()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ROLL_MONTAGE(TEXT("AnimMontage'/Game/ShimJaeChun/Anim_j/RollMontage.RollMontage'"));
-	if (ROLL_MONTAGE.Succeeded())
-	{
-		rollMontage = ROLL_MONTAGE.Object;
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Montage error");
-	}
 	isSit = false;
+	isLadder = false;
+	isPushing = false;
 	currentPawnSpeed = 0.0f;
-}
-
-void UATCAnimInstance_j::PlayRollMontage()
-{
-	Montage_Play(rollMontage, 1.0f);
 }
 
 void UATCAnimInstance_j::NativeBeginPlay()
@@ -45,13 +33,17 @@ void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 		isSit = character->GetMovementComponent()->IsCrouching();
 		isInAir = character->GetCharacterMovement()->IsFalling();
 
-		if (Montage_IsPlaying(rollMontage))
+		isLadder = character->IsLadder2;
+		isPushing = character->IsPushing2;
+		isInswarmp = character->isInSwamp;
+
+		if (character->isInSwamp)
 		{
-			character->isRoll = true;
+			character->GetCharacterMovement()->JumpZVelocity = character->swampjumpZvelocity;
 		}
 		else
 		{
-			character->isRoll = false;
+			character->GetCharacterMovement()->JumpZVelocity = character->jumpZvelocity;
 		}
 
 		// 점프, 공중에 떠 있는 경우 예외처리
