@@ -24,16 +24,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(BlueprintReadOnly,EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UBoxComponent* Box;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* ObstacleMesh;
 
-	UPROPERTY(BlueprintReadOnly,EditAnywhere)
+	UPROPERTY(EditAnywhere)
 		class USceneComponent* SceneLoot;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 
@@ -46,4 +46,7 @@ public:
 
 	 UFUNCTION(BlueprintCallable, Category = "Shoot")
 		 void Shoot();
+
+	 UFUNCTION(BlueprintImplementableEvent, Category = "Damage")
+		 void Damage(class AActor* OtherActor);
 };
