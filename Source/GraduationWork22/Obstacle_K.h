@@ -43,4 +43,7 @@ public:
 
 	 UFUNCTION(BlueprintCallable, Category = "Active")
 		 void ActiveFalse();
+
+	 UFUNCTION(BlueprintCallable, Category = "Shoot")
+		 void Shoot();
 };

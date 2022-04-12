@@ -34,7 +34,7 @@ void AObstacle_K::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//Box->SetRelativeLocation(FVector( 50.0f, 0.0f, 160.0f));
+	
 	
 }
 
@@ -49,11 +49,7 @@ void AObstacle_K::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 	
 		if (OtherActor->ActorHasTag(TEXT("PLAYER"))) {
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit:Player")));
-			/*if (this->ActorHasTag(TEXT("WALL")))
-			{
-				
-			}
-			else {*/
+			
 				this->SetActorHiddenInGame(true);
 					this->SetActorEnableCollision(false);
 			}
@@ -71,12 +67,16 @@ void AObstacle_K::ActiveFalse()
 	this->SetActorHiddenInGame(true);
 	this->SetActorEnableCollision(false);
 	
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Active false")));
+	
 }
 void AObstacle_K::ActiveTrue()
 {
 	this->SetActorTickEnabled(true);
 	this->SetActorHiddenInGame(false);
 	this->SetActorEnableCollision(true);
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Active true")));
+	
+}
+void AObstacle_K::Shoot()
+{
+
 }
