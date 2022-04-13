@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include <vector>
+
 // Sets default values
 ASelfMonster_K::ASelfMonster_K()
 {
