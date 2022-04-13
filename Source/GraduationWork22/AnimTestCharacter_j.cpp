@@ -90,7 +90,7 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 void AAnimTestCharacter_j::MoveForward(float value)
 {
 	// Normal Walking
-	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode))
+	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode) && (currentMoveMode != EMoveMode::BackViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -99,7 +99,7 @@ void AAnimTestCharacter_j::MoveForward(float value)
 		AddMovementInput(Direction, value);
 	}
 	// Ladder climbing
-	else if ((Controller != NULL) && (value != 0.0f) && IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode))
+	else if ((Controller != NULL) && (value != 0.0f) && IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode) && (currentMoveMode != EMoveMode::BackViewMode))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "is Ladder");
 		AddMovementInput(FVector::UpVector, value);
@@ -107,22 +107,22 @@ void AAnimTestCharacter_j::MoveForward(float value)
 }
 void AAnimTestCharacter_j::MoveRight(float value)
 {
-	// Normal QuarterView Walking
-	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2  && (currentMoveMode != EMoveMode::SideViewMode))
-	{
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		AddMovementInput(Direction, value);
-	}
 	// Normal SideView Walking
-	else if ((Controller != NULL) && (value != 0.0f) && !IsLadder2  && (currentMoveMode == EMoveMode::SideViewMode))
+	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2  && (currentMoveMode == EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput((Direction* -1.0f), value);
+	}
+	// Normal QuarterView Walking
+	else if ((Controller != NULL) && (value != 0.0f) && !IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode))
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, value);
 	}
 }
