@@ -3,7 +3,7 @@
 
 #include "Obstacle_K.h"
 #include "Components/BoxComponent.h"
-#include "GameFramework/Actor.h"
+//#include "GameFramework/Actor.h"
 
 // Sets default values
 AObstacle_K::AObstacle_K()
@@ -18,7 +18,7 @@ AObstacle_K::AObstacle_K()
 	RootComponent = SceneLoot;
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	Box->SetupAttachment(RootComponent);
-	 ObstacleMesh->SetupAttachment(RootComponent);
+	ObstacleMesh->SetupAttachment(RootComponent);
 	
 	Box->OnComponentBeginOverlap.AddDynamic(this, &AObstacle_K::OnOverlapBegin);
 	
@@ -49,9 +49,8 @@ void AObstacle_K::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 	
 		if (OtherActor->ActorHasTag(TEXT("PLAYER"))) {
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit:Player")));
-			
-				this->SetActorHiddenInGame(true);
-					this->SetActorEnableCollision(false);
+			Damage(OtherActor);
+			ActiveFalse();
 			}
 		}
 
@@ -63,7 +62,7 @@ void AObstacle_K::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 
 void AObstacle_K::ActiveFalse()
 {
-	this->SetActorTickEnabled(false);
+	//this->SetActorTickEnabled(false);
 	this->SetActorHiddenInGame(true);
 	this->SetActorEnableCollision(false);
 	
@@ -71,7 +70,7 @@ void AObstacle_K::ActiveFalse()
 }
 void AObstacle_K::ActiveTrue()
 {
-	this->SetActorTickEnabled(true);
+	//this->SetActorTickEnabled(true);
 	this->SetActorHiddenInGame(false);
 	this->SetActorEnableCollision(true);
 	
