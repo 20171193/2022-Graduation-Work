@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include <vector>
+
 // Sets default values
 ASelfMonster_K::ASelfMonster_K()
 {
@@ -49,13 +50,7 @@ void ASelfMonster_K::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 	{
 		if (OtherActor->ActorHasTag(TEXT("PLAYER"))) {
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit:Player")));
-			on = false;
-			this->SetActorTickEnabled(false);
-			this->SetActorHiddenInGame(true);
-			this->SetActorEnableCollision(false);
-			GetCapsuleComponent()->SetComponentTickEnabled(false);	
-			Respone();
-			Timer(10.0f);
+	
 			
 		}
 		else if (OtherActor->ActorHasTag(TEXT("DOOR"))) {
@@ -66,7 +61,7 @@ void ASelfMonster_K::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 			this->SetActorEnableCollision(false);
 			GetCapsuleComponent()->SetComponentTickEnabled(false);
 			Respone();
-			Timer(10.0f);
+			//Timer(10.0f);
 		}
 	
 	}
@@ -90,3 +85,13 @@ void ASelfMonster_K::Timer(float waitTimer)
 			}), waitTimer, false);
 	}
 
+void ASelfMonster_K::ActiveFalse()
+{
+	on = false;
+	this->SetActorTickEnabled(false);
+	this->SetActorHiddenInGame(true);
+	this->SetActorEnableCollision(false);
+	GetCapsuleComponent()->SetComponentTickEnabled(false);
+
+
+}

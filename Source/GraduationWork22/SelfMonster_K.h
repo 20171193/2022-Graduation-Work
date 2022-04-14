@@ -42,7 +42,7 @@ FVector MonsterLocation;
 UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 FRotator MonsterRotation;
 
-UFUNCTION()
+UFUNCTION(BlueprintCallable, Category = "Active")
 void Timer(float waitTimer);
 FTimerHandle WaitHandle;
 
@@ -53,5 +53,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void Respone();
 
-
+	UFUNCTION(BlueprintCallable, Category = "Active")
+		void ActiveFalse();
+	
 };
