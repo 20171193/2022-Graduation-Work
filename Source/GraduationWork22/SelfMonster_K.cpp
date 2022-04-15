@@ -49,7 +49,7 @@ void ASelfMonster_K::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
 		if (OtherActor->ActorHasTag(TEXT("PLAYER"))) {
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit:Player")));
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit:Player")));
 	
 			
 		}
@@ -81,7 +81,7 @@ void ASelfMonster_K::Timer(float waitTimer)
 				this->SetActorEnableCollision(true);
 				GetCapsuleComponent()->SetComponentTickEnabled(true);
 				on = true;
-				
+				Respone();
 			}), waitTimer, false);
 	}
 
