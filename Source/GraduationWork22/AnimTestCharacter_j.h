@@ -41,6 +41,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UCameraComponent* CameraComponent;
 
+public:
+
 	UFUNCTION()
 	void MoveForward(float value);
 	
