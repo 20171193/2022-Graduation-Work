@@ -6,6 +6,7 @@
 #include "Engine/Classes/Components/CapsuleComponent.h"
 #include "Engine/Classes/GameFramework/SpringArmComponent.h"
 #include "Engine/Classes/GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 #include <Blueprint/AIBlueprintHelperLibrary.h>
 #include "Engine/Classes/GameFramework/CharacterMovementComponent.h"
 
@@ -132,6 +133,7 @@ void AAnimTestCharacter_j::StartJump()
 	if (currentMoveMode != EMoveMode::TopViewMode)
 	{
 		bPressedJump = true;
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SB_Jump, this->GetActorLocation());
 	}
 }
 
