@@ -41,6 +41,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UCameraComponent* CameraComponent;
 
+	UPROPERTY(EditDefaultsOnly)
+	class USoundBase* SB_Jump;
+
+public:
+
 	UFUNCTION()
 	void MoveForward(float value);
 	

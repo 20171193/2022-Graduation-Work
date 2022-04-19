@@ -5,7 +5,6 @@
 #include "Components/BoxComponent.h"
 #include "Engine.h"
 #include "BasicCharacter_j.h"
-#include "MyTestCharacter_j.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
