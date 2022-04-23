@@ -130,7 +130,11 @@ void AAnimTestCharacter_j::MoveRight(float value)
 
 void AAnimTestCharacter_j::StartJump()
 {
-	if (currentMoveMode != EMoveMode::TopViewMode)
+	if (this->GetCharacterMovement()->IsCrouching())
+	{
+		UnCrouch();
+	}
+	else if (currentMoveMode != EMoveMode::TopViewMode)
 	{
 		bPressedJump = true;
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SB_Jump, this->GetActorLocation());
