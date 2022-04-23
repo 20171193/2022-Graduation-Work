@@ -61,6 +61,9 @@ public:
 	UFUNCTION()
 	void Sit();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsDeath;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool rollAble;
 
