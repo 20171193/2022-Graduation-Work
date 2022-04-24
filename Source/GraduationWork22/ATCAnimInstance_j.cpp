@@ -33,10 +33,11 @@ void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 		isSit = character->GetMovementComponent()->IsCrouching();
 		isInAir = character->GetCharacterMovement()->IsFalling();
 
+		isDeath = character->IsDeath;
 		isLadder = character->IsLadder2;
 		isPushing = character->IsPushing2;
 		isInswarmp = character->isInSwamp;
-
+	
 		if (character->isInSwamp)
 		{
 			character->GetCharacterMovement()->JumpZVelocity = character->swampjumpZvelocity;
