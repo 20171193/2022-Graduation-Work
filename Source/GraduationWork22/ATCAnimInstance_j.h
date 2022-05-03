@@ -21,7 +21,6 @@ public:
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
-	void PlayRollMontage();
 
 	UPROPERTY(EditAnywhere)
 	EMoveMode moveMode;
@@ -33,6 +32,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
 	float currentPawnSpeed;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
+	bool isDeath;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
 	bool isSit;
 

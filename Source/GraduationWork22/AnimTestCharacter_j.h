@@ -41,6 +41,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UCameraComponent* CameraComponent;
 
+	UPROPERTY(EditDefaultsOnly)
+	class USoundBase* SB_Jump;
+
+public:
+
 	UFUNCTION()
 	void MoveForward(float value);
 	
@@ -55,6 +60,9 @@ public:
 
 	UFUNCTION()
 	void Sit();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsDeath;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool rollAble;

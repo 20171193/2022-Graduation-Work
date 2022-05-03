@@ -6,6 +6,7 @@
 #include "Engine/Classes/Components/CapsuleComponent.h"
 #include "Engine/Classes/GameFramework/SpringArmComponent.h"
 #include "Engine/Classes/GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 #include <Blueprint/AIBlueprintHelperLibrary.h>
 #include "Engine/Classes/GameFramework/CharacterMovementComponent.h"
 
@@ -41,7 +42,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	sprintSpeed = 650.0f;
 	walkSpeed = 400.0f;
 
-	swampSprintSpeed = 550.0f;
+	swampSprintSpeed = 500.0f;
 	swampWalkSpeed = 300.0F;
 
 	pushSpeed = 200.0f;
@@ -90,7 +91,7 @@ void AAnimTestCharacter_j::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 void AAnimTestCharacter_j::MoveForward(float value)
 {
 	// Normal Walking
-	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode))
+	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode) && (currentMoveMode != EMoveMode::BackViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -99,16 +100,25 @@ void AAnimTestCharacter_j::MoveForward(float value)
 		AddMovementInput(Direction, value);
 	}
 	// Ladder climbing
-	else if ((Controller != NULL) && (value != 0.0f) && IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode))
+	else if ((Controller != NULL) && (value != 0.0f) && IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode) && (currentMoveMode != EMoveMode::BackViewMode))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "is Ladder");
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "is Ladder");
 		AddMovementInput(FVector::UpVector, value);
 	}
 }
 void AAnimTestCharacter_j::MoveRight(float value)
 {
+	// Normal SideView Walking
+	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2  && (currentMoveMode == EMoveMode::SideViewMode))
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput((Direction* -1.0f), value);
+	}
 	// Normal QuarterView Walking
-	if ((Controller != NULL) && (value != 0.0f) && !IsLadder2  && (currentMoveMode != EMoveMode::SideViewMode))
+	else if ((Controller != NULL) && (value != 0.0f) && !IsLadder2 && (currentMoveMode != EMoveMode::SideViewMode))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -116,22 +126,18 @@ void AAnimTestCharacter_j::MoveRight(float value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, value);
 	}
-	// Normal SideView Walking
-	else if ((Controller != NULL) && (value != 0.0f) && !IsLadder2  && (currentMoveMode == EMoveMode::SideViewMode))
-	{
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, value);
-	}
 }
 
 void AAnimTestCharacter_j::StartJump()
 {
-	if (currentMoveMode != EMoveMode::TopViewMode)
+	if (this->GetCharacterMovement()->IsCrouching())
+	{
+		UnCrouch();
+	}
+	else if (currentMoveMode != EMoveMode::TopViewMode && !this->GetCharacterMovement()->IsFalling())
 	{
 		bPressedJump = true;
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SB_Jump, this->GetActorLocation());
 	}
 }
 
@@ -160,14 +166,14 @@ void AAnimTestCharacter_j::Sprint()
 	{ // 스테미너가 0인 경우
 		if (currentStamina <= 0)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Not yet Sprint");
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Not yet Sprint");
 		}
 		// 스테미너가 0이 아닌 경우
 		else
 		{
 			// recover 타이머 해제
 			GetWorldTimerManager().ClearTimer(recoverTH);
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "consume start");
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "consume start");
 			GetWorldTimerManager().SetTimer(consumeTH, this, &AAnimTestCharacter_j::ConsumeStamina, 0.1f, true);
 		}
 	}
@@ -180,11 +186,11 @@ void AAnimTestCharacter_j::StopSprinting()
 		GetWorldTimerManager().ClearTimer(consumeTH);
 		GetWorld()->GetTimerManager().SetTimer(waitHandle, FTimerDelegate::CreateLambda([&]()
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 0.3f, FColor::Black, "Delay Finished");
+				//GEngine->AddOnScreenDebugMessage(-1, 0.3f, FColor::Black, "Delay Finished");
 				// 딜레이 후 실행
 				GetWorld()->GetTimerManager().ClearTimer(waitHandle);
 				currentStamina += 3;
-				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
+				//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
 				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 				sprintAble = true;
 			}), waitCount, false);
@@ -193,7 +199,7 @@ void AAnimTestCharacter_j::StopSprinting()
 		{
 			// consume 타이머 해제
 			GetWorldTimerManager().ClearTimer(consumeTH);
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
 			GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 	}
 }
