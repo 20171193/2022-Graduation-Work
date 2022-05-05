@@ -58,6 +58,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	climbable2 = false;
 	IsPushing2 = false;
 	isInSwamp = false;
+	IsDeath = false;
 }
 
 // Called when the game starts or when spawned
@@ -134,7 +135,7 @@ void AAnimTestCharacter_j::StartJump()
 	{
 		UnCrouch();
 	}
-	else if (currentMoveMode != EMoveMode::TopViewMode && !this->GetCharacterMovement()->IsFalling())
+	else if (currentMoveMode != EMoveMode::TopViewMode && !this->GetCharacterMovement()->IsFalling() && !IsDeath)
 	{
 		bPressedJump = true;
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SB_Jump, this->GetActorLocation());
