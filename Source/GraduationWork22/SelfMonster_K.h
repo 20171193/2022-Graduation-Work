@@ -28,7 +28,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 private:
 	
 UFUNCTION()
@@ -42,7 +42,7 @@ FVector MonsterLocation;
 UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 FRotator MonsterRotation;
 
-UFUNCTION()
+UFUNCTION(BlueprintCallable, Category = "Active")
 void Timer(float waitTimer);
 FTimerHandle WaitHandle;
 
@@ -53,5 +53,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void Respone();
 
-
+	UFUNCTION(BlueprintCallable, Category = "Active")
+		void ActiveFalse();
+	
+	
 };

@@ -9,6 +9,8 @@
 /**
  * 
  */
+
+
 UCLASS()
 class GRADUATIONWORK22_API UATCAnimInstance_j : public UAnimInstance
 {
@@ -19,21 +21,33 @@ public:
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
-	// 구르기 애니메이션 실행
-	void PlayRollMontage();
 
-private:
+	UPROPERTY(EditAnywhere)
+	EMoveMode moveMode;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	AAnimTestCharacter_j* character;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Roll", Meta = (AllowPrivateAccess = true))
-	UAnimMontage* rollMontage;
-
+private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
 	float currentPawnSpeed;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
+	bool isDeath;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
 	bool isSit;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
 	bool isInAir;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
+	bool isLadder;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
+	bool isPushing;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
+	bool isInswarmp;
+
 };
