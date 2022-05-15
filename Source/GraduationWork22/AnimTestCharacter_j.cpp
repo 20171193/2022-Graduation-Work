@@ -58,6 +58,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	climbable2 = false;
 	IsPushing2 = false;
 	isInSwamp = false;
+	IsDeath = false;
 }
 
 // Called when the game starts or when spawned
@@ -134,7 +135,7 @@ void AAnimTestCharacter_j::StartJump()
 	{
 		UnCrouch();
 	}
-	else if (currentMoveMode != EMoveMode::TopViewMode && !this->GetCharacterMovement()->IsFalling())
+	else if (currentMoveMode != EMoveMode::TopViewMode && !this->GetCharacterMovement()->IsFalling() && !IsDeath)
 	{
 		bPressedJump = true;
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SB_Jump, this->GetActorLocation());
@@ -211,6 +212,7 @@ void AAnimTestCharacter_j::ConsumeStamina()
 	if (this->GetVelocity().Size() >= 300.0f)
 	{
 		currentStamina -= 0.1f;
+		IsIncreaseStamina = false;
 	}
 	// 스테미너 모두 소진 시 캐릭터의 속도 감소.
 	if (currentStamina <= 0)
@@ -258,7 +260,8 @@ void AAnimTestCharacter_j::RecoverStamina()
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	}
 	currentStamina+=0.1f;
-	// 스테미너가 10 이상일 경우 recover 중지.
+	IsIncreaseStamina = true;
+	// 스테미너가 5 이상일 경우 recover 중지.
 	if (currentStamina >= 5)
 	{
 		currentStamina = 5;
