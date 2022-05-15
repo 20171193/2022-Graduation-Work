@@ -212,6 +212,7 @@ void AAnimTestCharacter_j::ConsumeStamina()
 	if (this->GetVelocity().Size() >= 300.0f)
 	{
 		currentStamina -= 0.1f;
+		IsIncreaseStamina = false;
 	}
 	// 스테미너 모두 소진 시 캐릭터의 속도 감소.
 	if (currentStamina <= 0)
@@ -259,7 +260,8 @@ void AAnimTestCharacter_j::RecoverStamina()
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	}
 	currentStamina+=0.1f;
-	// 스테미너가 10 이상일 경우 recover 중지.
+	IsIncreaseStamina = true;
+	// 스테미너가 5 이상일 경우 recover 중지.
 	if (currentStamina >= 5)
 	{
 		currentStamina = 5;

@@ -62,6 +62,9 @@ public:
 	void Sit();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsIncreaseStamina;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsDeath;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
