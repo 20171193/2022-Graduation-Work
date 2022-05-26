@@ -13,19 +13,5 @@
 				"AIModule"
 			]
 		}
-	],
-	"Plugins": [
-		{
-			"Name": "ApexDestruction",
-			"Enabled": true
-		},
-		{
-<<<<<<< HEAD
-			"Name": "NiagaraExtras",
-=======
-			"Name": "Landmass",
->>>>>>> Choijuhyung
-			"Enabled": true
-		}
 	]
 }
