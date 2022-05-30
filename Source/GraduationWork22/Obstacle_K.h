@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class USceneComponent* SceneLoot;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool finish = false;
+
 	UFUNCTION(BlueprintCallable)
 		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -49,4 +52,6 @@ public:
 
 	 UFUNCTION(BlueprintImplementableEvent, Category = "Damage")
 		 void Damage(class AActor* OtherActor);
+
+	
 };
