@@ -30,7 +30,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 
 	currentMoveMode = EMoveMode::QuarterViewMode;
 
-	playerHp = 5;
+	//playerHp = 5;
 	maxStamina = 5.0f;
 	currentStamina = 5.0f;
 
