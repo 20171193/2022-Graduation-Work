@@ -47,13 +47,13 @@ void AObstacle_K::Tick(float DeltaTime)
 
 void AObstacle_K::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	
-		if (OtherActor->ActorHasTag(TEXT("PLAYER"))) {
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit:Player")));
-			Damage(OtherActor);
-			if (finish == false)
-				ActiveFalse();
-		
-			}
+	if (OtherActor->ActorHasTag(TEXT("PLAYER"))) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit:Player")));
+		Damage(OtherActor);
+		//if (finish == false)
+			//ActiveFalse();
+
+	}
 		}
 
 
