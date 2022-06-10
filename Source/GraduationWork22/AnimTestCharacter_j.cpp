@@ -165,42 +165,20 @@ void AAnimTestCharacter_j::Sprint()
 {
 	if (!IsPushing2)
 	{ // 스테미너가 0인 경우
-		if (currentStamina <= 0)
-		{
-			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Not yet Sprint");
-		}
-		// 스테미너가 0이 아닌 경우
-		else
+		if (currentStamina > 0)
 		{
 			// recover 타이머 해제
 			GetWorldTimerManager().ClearTimer(recoverTH);
-			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "consume start");
 			GetWorldTimerManager().SetTimer(consumeTH, this, &AAnimTestCharacter_j::ConsumeStamina, 0.1f, true);
 		}
 	}
 }
 void AAnimTestCharacter_j::StopSprinting()
 {
-	if (currentStamina <= 0 && !sprintAble)
+	if (currentStamina > 0 && sprintAble)
 	{
-		// consume 타이머 해제
-		GetWorldTimerManager().ClearTimer(consumeTH);
-		GetWorld()->GetTimerManager().SetTimer(waitHandle, FTimerDelegate::CreateLambda([&]()
-			{
-				//GEngine->AddOnScreenDebugMessage(-1, 0.3f, FColor::Black, "Delay Finished");
-				// 딜레이 후 실행
-				GetWorld()->GetTimerManager().ClearTimer(waitHandle);
-				currentStamina += 3;
-				//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
-				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
-				sprintAble = true;
-			}), waitCount, false);
-		}
-		else if (sprintAble)
-		{
 			// consume 타이머 해제
 			GetWorldTimerManager().ClearTimer(consumeTH);
-			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
 			GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 	}
 }
@@ -214,12 +192,27 @@ void AAnimTestCharacter_j::ConsumeStamina()
 		currentStamina -= 0.1f;
 		IsIncreaseStamina = false;
 	}
+	else
+	{
+		GetWorldTimerManager().ClearTimer(consumeTH);
+		GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
+	}
 	// 스테미너 모두 소진 시 캐릭터의 속도 감소.
 	if (currentStamina <= 0)
 	{
 		currentStamina = 0;
 		sprintAble = false;
 		GetWorldTimerManager().ClearTimer(consumeTH);
+		GetWorld()->GetTimerManager().SetTimer(waitHandle, FTimerDelegate::CreateLambda([&]()
+			{
+				//GEngine->AddOnScreenDebugMessage(-1, 0.3f, FColor::Black, "Delay Finished");
+				// 딜레이 후 실행
+				GetWorld()->GetTimerManager().ClearTimer(waitHandle);
+				currentStamina += 3;
+				//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
+				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
+				sprintAble = true;
+			}), waitCount, false);
 		if (isInSwamp)
 		{
 			GetCharacterMovement()->MaxWalkSpeed = swampWalkSpeed;
