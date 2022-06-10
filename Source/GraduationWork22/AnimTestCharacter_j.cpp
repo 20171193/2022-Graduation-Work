@@ -43,7 +43,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	walkSpeed = 400.0f;
 
 	swampSprintSpeed = 500.0f;
-	swampWalkSpeed = 300.0F;
+	swampWalkSpeed = 320.0F;
 
 	pushSpeed = 200.0f;
 
@@ -53,12 +53,14 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	sprintAble = true;
 	rollAble = true;
 	sitAble = true;
+	IsLoading = true;
 
 	IsLadder2 = false;
 	climbable2 = false;
 	IsPushing2 = false;
 	isInSwamp = false;
 	IsDeath = false;
+	IsInCutScene = false;
 }
 
 // Called when the game starts or when spawned
@@ -135,7 +137,7 @@ void AAnimTestCharacter_j::StartJump()
 	{
 		UnCrouch();
 	}
-	else if (currentMoveMode != EMoveMode::TopViewMode && !this->GetCharacterMovement()->IsFalling() && !IsDeath)
+	else if (currentMoveMode != EMoveMode::TopViewMode && !this->GetCharacterMovement()->IsFalling() && !IsDeath && !IsInCutScene && !IsLoading)
 	{
 		bPressedJump = true;
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SB_Jump, this->GetActorLocation());
@@ -163,7 +165,7 @@ void AAnimTestCharacter_j::Sit()
 
 void AAnimTestCharacter_j::Sprint()
 {
-	if (!IsPushing2)
+	if (!IsPushing2 && !this->GetCharacterMovement()->IsFalling())
 	{ // 스테미너가 0인 경우
 		if (currentStamina > 0)
 		{
