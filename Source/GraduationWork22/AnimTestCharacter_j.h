@@ -85,6 +85,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isInSwamp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsInCutScene;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsLoading;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Movement: Walking")
 	float swampWalkSpeed;
 

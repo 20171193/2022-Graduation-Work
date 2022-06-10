@@ -33,6 +33,7 @@ void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 		isSit = character->GetMovementComponent()->IsCrouching();
 		isInAir = character->GetCharacterMovement()->IsFalling();
 
+		
 		isDeath = character->IsDeath;
 		isLadder = character->IsLadder2;
 		isPushing = character->IsPushing2;
@@ -46,7 +47,10 @@ void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 		{
 			character->GetCharacterMovement()->JumpZVelocity = character->jumpZvelocity;
 		}
-
+		if (isPushing || isLadder || isDeath || character->IsLoading)
+		{
+			character->rollAble = false;
+		}
 		// 점프, 공중에 떠 있는 경우 예외처리
 		if (isInAir)
 		{
