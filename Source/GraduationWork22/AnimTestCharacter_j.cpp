@@ -43,7 +43,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	walkSpeed = 400.0f;
 
 	swampSprintSpeed = 500.0f;
-	swampWalkSpeed = 300.0F;
+	swampWalkSpeed = 320.0F;
 
 	pushSpeed = 200.0f;
 
@@ -163,7 +163,7 @@ void AAnimTestCharacter_j::Sit()
 
 void AAnimTestCharacter_j::Sprint()
 {
-	if (!IsPushing2)
+	if (!IsPushing2 && !this->GetCharacterMovement()->IsFalling())
 	{ // 스테미너가 0인 경우
 		if (currentStamina > 0)
 		{
