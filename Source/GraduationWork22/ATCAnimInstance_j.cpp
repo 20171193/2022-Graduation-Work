@@ -45,11 +45,15 @@ void UATCAnimInstance_j::NativeUpdateAnimation(float DeltaSeconds)
 			character->sprintSpeed = character->swampSprintSpeed;
 			character->walkSpeed = character->swampWalkSpeed;
 		}
-		else
+		else if(!isPushing)
 		{
 			character->GetCharacterMovement()->JumpZVelocity = character->jumpZvelocity;
 			character->sprintSpeed = 650.0f;
 			character->walkSpeed = 400.0f;
+		}
+		else
+		{
+			character->GetCharacterMovement()->MaxWalkSpeed = character->pushSpeed;
 		}
 		if (isPushing || isLadder || isDeath || character->IsLoading)
 		{
