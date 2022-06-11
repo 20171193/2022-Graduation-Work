@@ -72,7 +72,7 @@ void ASelfMonster_K::Timer(float waitTimer)
 		GetWorld()->GetTimerManager().SetTimer(WaitHandle, FTimerDelegate::CreateLambda([&]()
 			{
 				
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("aaaa")));
+				
 				 
 				this->SetActorLocation(MonsterLocation);
 				this->SetActorRotation(MonsterRotation);
