@@ -185,6 +185,7 @@ void AAnimTestCharacter_j::StopSprinting()
 	}
 }
 
+
 // 스테미너 감소
 void AAnimTestCharacter_j::ConsumeStamina()
 {
@@ -205,6 +206,7 @@ void AAnimTestCharacter_j::ConsumeStamina()
 	{
 		currentStamina = 0;
 		sprintAble = false;
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 		GetWorldTimerManager().ClearTimer(consumeTH);
 		GetWorld()->GetTimerManager().SetTimer(waitHandle, FTimerDelegate::CreateLambda([&]()
 			{
@@ -215,24 +217,14 @@ void AAnimTestCharacter_j::ConsumeStamina()
 				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 				sprintAble = true;
 			}), waitCount, false);
+	}
 }
 
 // 스테미너 회복
 void AAnimTestCharacter_j::RecoverStamina()
 {
-	if (IsPushing2)
-	{
-		GetCharacterMovement()->MaxWalkSpeed = pushSpeed;
-	}
-	else if(isInSwamp)
-	{
-		GetCharacterMovement()->MaxWalkSpeed = swampWalkSpeed;
-	}
-	else
-	{
-		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
-	}
-	currentStamina+=0.1f;
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+	currentStamina += 0.1f;
 	IsIncreaseStamina = true;
 	// 스테미너가 5 이상일 경우 recover 중지.
 	if (currentStamina >= 5)
@@ -242,6 +234,7 @@ void AAnimTestCharacter_j::RecoverStamina()
 	}
 	// 기본 회복모드
 }
+
 float AAnimTestCharacter_j::GetMaxStamina()
 {
 	return maxStamina;
@@ -256,11 +249,9 @@ void AAnimTestCharacter_j::SetSwarmpMode(bool state)
 	if (!state)
 	{
 		isInSwamp = false;
-		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	}
 	else
 	{
 		isInSwamp = true;
-		GetCharacterMovement()->MaxWalkSpeed = swampWalkSpeed;
 	}
 }
