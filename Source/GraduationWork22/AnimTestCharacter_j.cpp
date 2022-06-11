@@ -193,6 +193,7 @@ void AAnimTestCharacter_j::ConsumeStamina()
 	{
 		currentStamina -= 0.1f;
 		IsIncreaseStamina = false;
+		GetCharacterMovement()->MaxWalkSpeed = sprintSpeed;
 	}
 	else
 	{
@@ -211,32 +212,9 @@ void AAnimTestCharacter_j::ConsumeStamina()
 				// 딜레이 후 실행
 				GetWorld()->GetTimerManager().ClearTimer(waitHandle);
 				currentStamina += 3;
-				//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "recover start");
 				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
 				sprintAble = true;
 			}), waitCount, false);
-		if (isInSwamp)
-		{
-			GetCharacterMovement()->MaxWalkSpeed = swampWalkSpeed;
-		}
-		else
-		{
-			GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
-		}
-	}
-	// 스테미너가 있을 경우 캐릭터의 속도 증가.
-	else if(isInSwamp)
-	{
-		GetCharacterMovement()->MaxWalkSpeed = swampSprintSpeed;
-	}
-	else if (IsPushing2)
-	{
-		GetCharacterMovement()->MaxWalkSpeed = pushSpeed;
-	}
-	else
-	{
-		GetCharacterMovement()->MaxWalkSpeed = sprintSpeed;
-	}
 }
 
 // 스테미너 회복
