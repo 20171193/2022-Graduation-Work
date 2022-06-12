@@ -37,7 +37,7 @@ AAnimTestCharacter_j::AAnimTestCharacter_j()
 	// 스테미너 소진 카운트
 	callStaminaCount = 0;
 	// 스테미너 소진 시 딜레이
-	waitCount = 3;
+	waitCount = 3.0f;
 
 	sprintSpeed = 650.0f;
 	walkSpeed = 400.0f;
@@ -208,18 +208,21 @@ void AAnimTestCharacter_j::ConsumeStamina()
 		sprintAble = false;
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 		GetWorldTimerManager().ClearTimer(consumeTH);
-		GetWorld()->GetTimerManager().SetTimer(waitHandle, FTimerDelegate::CreateLambda([&]()
-			{
-				//GEngine->AddOnScreenDebugMessage(-1, 0.3f, FColor::Black, "Delay Finished");
-				// 딜레이 후 실행
-				GetWorld()->GetTimerManager().ClearTimer(waitHandle);
-				currentStamina += 3;
-				GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
-				sprintAble = true;
-			}), waitCount, false);
+		GetWorldTimerManager().SetTimer(zeroTH, this, &AAnimTestCharacter_j::StaminaZero, 0.1f, true);
 	}
 }
-
+void AAnimTestCharacter_j::StaminaZero()
+{
+	waitCount -= 0.1f;
+	if (waitCount <= 0.0f)
+	{
+		currentStamina += 3.0f;
+		sprintAble = true;
+		waitCount = 3.0f;
+		GetWorld()->GetTimerManager().ClearTimer(zeroTH);
+		GetWorldTimerManager().SetTimer(recoverTH, this, &AAnimTestCharacter_j::RecoverStamina, 0.1f, true);
+	}
+}
 // 스테미너 회복
 void AAnimTestCharacter_j::RecoverStamina()
 {
