@@ -150,12 +150,19 @@ protected:
 	UFUNCTION()
 	void RecoverStamina();
 
+	UFUNCTION()
+	void StaminaZero();
+
 	UPROPERTY()
 	FTimerHandle consumeTH;
 	
 	UPROPERTY()
 	FTimerHandle recoverTH;
 	
+	UPROPERTY()
+	FTimerHandle zeroTH;
+
+
 	UPROPERTY()
 	int callStaminaCount;
 
@@ -165,5 +172,5 @@ protected:
 	FTimerHandle waitHandle;
 	
 	UPROPERTY()
-	int waitCount;
+	float waitCount;
 };
